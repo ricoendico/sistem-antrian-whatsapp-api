@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path'); // vercel
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -123,3 +124,4 @@ app.post('/api/antrean/reset', (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server berjalan di http://localhost:${PORT}`);
 });
+module.exports = app;
