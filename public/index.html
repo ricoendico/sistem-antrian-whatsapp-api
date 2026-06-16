@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Antrean Digital - Utama</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-blue-50 font-sans min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white p-10 rounded-3xl shadow-xl w-full max-w-4xl text-center">
+        <div class="flex justify-center mb-4">
+            <svg class="w-16 h-16 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.456 2.015a1 1 0 00-.912 0l-7 4A1 1 0 003 7v1h14V7a1 1 0 00-.544-.895l-7-4zM5 10h2v6H5v-6zm4 0h2v6H9v-6zm4 0h2v6h-2v-6zM3 18a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" />
+            </svg>
+        </div>
+        
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">Sistem Antrean Digital</h1>
+        <p class="text-gray-500 mb-10 text-lg">Pilih mode tampilan operasional di bawah ini.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <a href="/monitor.html" class="block bg-blue-600 hover:bg-blue-700 text-white p-8 rounded-2xl shadow-md transition transform hover:-translate-y-1">
+                <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                <h2 class="text-2xl font-bold mb-1">Layar Monitor</h2>
+                <p class="text-blue-200 text-sm">Tampilan utama dengan suara</p>
+            </a>
+
+            <a href="/tiket.html" class="block bg-teal-600 hover:bg-teal-700 text-white p-8 rounded-2xl shadow-md transition transform hover:-translate-y-1">
+                <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path></svg>
+                <h2 class="text-2xl font-bold mb-1">Ambil Tiket</h2>
+                <p class="text-teal-200 text-sm">Mode kiosk untuk pengunjung</p>
+            </a>
+
+            <a href="/admin.html" class="block bg-slate-700 hover:bg-slate-800 text-white p-8 rounded-2xl shadow-md transition transform hover:-translate-y-1">
+                <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                <h2 class="text-2xl font-bold mb-1">Login Petugas</h2>
+                <p class="text-slate-300 text-sm">Masuk ke dashboard panel</p>
+            </a>
+
+        </div>
+    </div>
+</body>
+</html>

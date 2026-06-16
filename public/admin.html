@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Antrean Digital - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 font-sans min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg">
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h1 class="text-xl font-bold text-slate-800">Panel Operator Klinik</h1>
+                <p class="text-sm text-slate-400">Pusat Pelayanan Terpadu</p>
+            </div>
+            <span class="bg-red-100 text-red-700 text-xs px-3 py-1 rounded-full font-bold uppercase tracking-wider">Mode Petugas</span>
+        </div>
+
+        <div class="bg-slate-50 p-6 rounded-xl text-center mb-6 border border-slate-200">
+            <h2 class="text-xs uppercase tracking-wider text-slate-500 font-bold mb-1">Sedang Dilayani</h2>
+            <p id="current-number" class="text-7xl font-black text-blue-600 my-2">0</p>
+            <p id="current-loket" class="text-sm font-semibold text-slate-500 bg-slate-200 inline-block px-3 py-1 rounded-full mt-2">Menunggu...</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-6 text-center text-sm">
+            <div class="border border-slate-100 p-4 rounded-xl bg-slate-50">
+                <span class="text-slate-400 block font-medium mb-1">Total Tiket</span>
+                <span id="last-number" class="text-2xl font-bold text-slate-700">0</span>
+            </div>
+            <div class="border border-slate-100 p-4 rounded-xl bg-slate-50">
+                <span class="text-slate-400 block font-medium mb-1">Sisa Menunggu</span>
+                <span id="remaining-queue" class="text-2xl font-bold text-amber-500">0</span>
+            </div>
+        </div>
+
+        <div class="border-t border-slate-200 pt-6 mb-4">
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div class="flex items-center gap-2 text-slate-600 font-bold text-sm">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
+                    Kontrol:
+                </div>
+                
+                <div class="flex items-center gap-2 w-full sm:w-auto">
+                    <select id="select-loket" class="border-2 border-blue-200 text-blue-700 font-bold py-2 px-3 rounded-lg bg-white outline-none cursor-pointer hover:border-blue-400 transition-colors">
+                        <option value="Loket 1">Loket 1</option>
+                        <option value="Loket 2">Loket 2</option>
+                        <option value="Loket 3">Loket 3</option>
+                    </select>
+
+                    <button id="btn-ulang" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-3 rounded-lg shadow-sm transition transform active:scale-95 flex items-center gap-1 text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"></path></svg>
+                        Ulang
+                    </button>
+
+                    <button id="btn-selanjutnya" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg shadow-sm transition transform active:scale-95 flex items-center gap-1 text-sm">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <button id="btn-reset" class="w-full bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-600 font-medium py-3 px-6 rounded-xl transition duration-150 cursor-pointer text-sm border border-slate-200">
+            Reset Semua Antrean
+        </button>
+    </div>
+
+    <script>
+        async function fetchStatus() {
+            const res = await fetch('/api/antrean/status');
+            const data = await res.json();
+            document.getElementById('current-number').innerText = data.current;
+            document.getElementById('last-number').innerText = data.last;
+            document.getElementById('remaining-queue').innerText = data.sisaAntrean;
+            
+            // Tampilkan loket yang sedang aktif
+            if(data.current > 0) {
+                document.getElementById('current-loket').innerText = `Sedang di: ${data.loket}`;
+            } else {
+                document.getElementById('current-loket').innerText = "Belum ada antrean";
+            }
+        }
+
+        // Fungsi Helper untuk mengirim data (Loket) ke backend
+        async function kirimAksi(url) {
+            const loketTerpilih = document.getElementById('select-loket').value;
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ loket: loketTerpilih })
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+                fetchStatus();
+            } else {
+                alert(data.message);
+            }
+        }
+
+        // Event Listeners
+        document.getElementById('btn-selanjutnya').addEventListener('click', () => {
+            kirimAksi('/api/antrean/panggil');
+        });
+
+        document.getElementById('btn-ulang').addEventListener('click', () => {
+            kirimAksi('/api/antrean/panggil-ulang');
+        });
+
+        document.getElementById('btn-reset').addEventListener('click', async () => {
+            if (confirm('Yakin ingin mereset antrean ke nol?')) {
+                const res = await fetch('/api/antrean/reset', { method: 'POST' });
+                await res.json();
+                fetchStatus();
+            }
+        });
+
+        setInterval(fetchStatus, 2000);
+        fetchStatus();
+    </script>
+</body>
+</html>

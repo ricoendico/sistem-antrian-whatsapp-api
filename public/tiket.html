@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Antrean Digital - Pasien</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* CSS Khusus untuk Mesin Printer */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #modal-tiket, #modal-tiket * {
+                visibility: visible;
+            }
+            #modal-tiket {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                background-color: white !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+            .print-header {
+                background-color: transparent !important;
+                color: black !important;
+                border-bottom: 2px dashed #000;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans min-h-screen flex flex-col items-center justify-center p-4 relative">
+
+    <div id="loading-overlay" class="fixed inset-0 bg-slate-900/60 z-[60] hidden flex flex-col items-center justify-center backdrop-blur-sm transition-opacity">
+        <svg class="animate-spin -ml-1 mr-3 h-12 w-12 text-teal-400 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <p class="text-white font-bold text-lg tracking-widest animate-pulse">MENCETAK TIKET...</p>
+    </div>
+
+    <div id="main-content" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md text-center">
+        <h1 class="text-2xl font-bold text-teal-600 mb-2">KLINIK SEHAT DIGITAL</h1>
+        <p class="text-slate-500 mb-6">Sistem Antrean Mandiri Pasien</p>
+
+        <div class="bg-teal-50 p-6 rounded-xl border border-teal-200 mb-6">
+            <h2 class="text-sm font-semibold text-teal-700 tracking-wide uppercase">Antrean Sekarang</h2>
+            <p id="current-number" class="text-6xl font-black text-teal-600 my-2">0</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-6 text-sm">
+            <div class="bg-slate-50 p-3 rounded-lg">
+                <span class="block text-slate-400">Terakhir Diambil</span>
+                <span id="last-number" class="font-bold text-slate-700 text-lg">0</span>
+            </div>
+            <div class="bg-slate-50 p-3 rounded-lg">
+                <span class="block text-slate-400">Sisa Menunggu</span>
+                <span id="remaining-queue" class="font-bold text-slate-700 text-lg">0</span>
+            </div>
+        </div>
+
+        <div class="mb-4 text-left">
+            <label class="block text-slate-600 text-sm font-bold mb-2" for="nomor-wa">
+                Nomor WhatsApp (Opsional)
+            </label>
+            <input type="tel" id="nomor-wa" placeholder="Contoh: 08123456789" 
+                   class="shadow-sm appearance-none border border-slate-300 rounded-xl w-full py-3 px-4 text-slate-700 leading-tight focus:outline-none focus:border-teal-500 focus:ring-1 focus:ring-teal-500">
+            <p class="text-xs text-slate-400 mt-1">Kami akan mengirim pesan saat giliran Anda tiba.</p>
+        </div>
+
+        <button id="btn-ambil" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-4 px-6 rounded-xl shadow-lg transition duration-200 transform active:scale-95 cursor-pointer">
+            Ambil Nomor Antrean
+        </button>
+    </div>
+
+    <div id="modal-tiket" class="fixed inset-0 bg-slate-900/80 z-50 hidden flex items-center justify-center backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden text-center transform scale-100">
+            
+            <div class="bg-teal-500 py-4 print-header">
+                <h3 class="text-white font-bold text-lg">Nomor Antrean Anda</h3>
+            </div>
+            
+            <div class="p-8 pb-6">
+                <p id="modal-waktu" class="text-slate-500 text-sm mb-2 font-medium">dd/mm/yyyy, hh:mm:ss</p>
+                <p id="modal-nomor" class="text-8xl font-black text-slate-800 mb-4 tracking-tighter">0</p>
+                <p class="text-slate-600 text-sm mb-8">Mohon menunggu hingga nomor anda dipanggil.</p>
+                
+                <div class="flex justify-center gap-3 no-print">
+                    <button id="btn-cetak" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-6 rounded-xl shadow transition flex items-center gap-2 cursor-pointer">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                        Cetak
+                    </button>
+                    <button id="btn-tutup" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-6 rounded-xl shadow transition cursor-pointer">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        async function fetchStatus() {
+            const res = await fetch('/api/antrean/status');
+            const data = await res.json();
+            
+            // Tampilkan angka langsung tanpa format
+            document.getElementById('current-number').innerText = data.current;
+            document.getElementById('last-number').innerText = data.last;
+            document.getElementById('remaining-queue').innerText = data.sisaAntrean;
+        }
+
+        document.getElementById('btn-ambil').addEventListener('click', async () => {
+            const noWa = document.getElementById('nomor-wa').value;
+            const btnAmbil = document.getElementById('btn-ambil');
+            
+            // 1. Munculkan overlay loading dan matikan tombol sementara
+            document.getElementById('loading-overlay').classList.remove('hidden');
+            btnAmbil.disabled = true;
+
+            const res = await fetch('/api/antrean/ambil', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ noWa: noWa })
+            });
+            const data = await res.json();
+            
+            if(data.success) {
+                // 2. Berikan delay (loading buatan) selama 1 detik (1000 ms)
+                setTimeout(() => {
+                    // Sembunyikan loading
+                    document.getElementById('loading-overlay').classList.add('hidden');
+                    btnAmbil.disabled = false;
+
+                    const waktuSekarang = new Date().toLocaleString('id-ID', {
+                        year: 'numeric', month: 'numeric', day: 'numeric',
+                        hour: '2-digit', minute: '2-digit', second: '2-digit'
+                    });
+
+                    // Masukkan data angka asli ke dalam Modal Struk
+                    document.getElementById('modal-nomor').innerText = data.nomorBaru;
+                    document.getElementById('modal-waktu').innerText = waktuSekarang;
+
+                    // Tampilkan Modal Pop-up
+                    document.getElementById('modal-tiket').classList.remove('hidden');
+
+                    // Kosongkan form dan update data
+                    document.getElementById('nomor-wa').value = ''; 
+                    fetchStatus();
+                }, 1000); // 1000 ms = 1 detik
+            } else {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                btnAmbil.disabled = false;
+            }
+        });
+
+        // Event tombol Tutup pada Modal
+        document.getElementById('btn-tutup').addEventListener('click', () => {
+            document.getElementById('modal-tiket').classList.add('hidden');
+        });
+
+        // Event tombol Cetak pada Modal
+        document.getElementById('btn-cetak').addEventListener('click', () => {
+            window.print(); 
+        });
+
+        setInterval(fetchStatus, 3000);
+        fetchStatus();
+    </script>
+</body>
+</html>

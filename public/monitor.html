@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Layar Monitor Antrean</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .marquee-container { overflow: hidden; white-space: nowrap; }
+        .marquee-text { display: inline-block; animation: marquee 20s linear infinite; }
+        @keyframes marquee {
+            0%   { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        .pulse-slow { animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans h-screen flex flex-col overflow-hidden">
+
+    <div id="start-screen" class="absolute inset-0 bg-slate-900/90 z-50 flex flex-col items-center justify-center backdrop-blur-sm">
+        <div class="bg-white p-10 rounded-3xl text-center max-w-lg shadow-2xl">
+            <svg class="w-20 h-20 text-teal-500 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+            </svg>
+            <h2 class="text-3xl font-bold text-slate-800 mb-4">Monitor Audio Siap</h2>
+            <p class="text-slate-500 mb-8">Klik tombol di bawah ini untuk memulai sistem monitor dan mengaktifkan suara otomatis Google.</p>
+            <button onclick="startMonitor()"
+                class="w-full bg-teal-600 hover:bg-teal-700 text-white text-xl font-bold py-4 rounded-xl shadow-lg transition-all transform hover:scale-105 cursor-pointer">
+                Aktifkan Layar &amp; Suara
+            </button>
+        </div>
+    </div>
+
+    <div id="main-screen" class="hidden flex-1 flex flex-col h-full">
+
+        <header class="bg-white shadow-sm py-4 px-8 flex justify-between items-center border-b border-slate-200 z-10">
+            <div class="flex items-center gap-3">
+                <div class="bg-teal-600 p-2 rounded-lg">
+                    <svg class="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.456 2.015a1 1 0 00-.912 0l-7 4A1 1 0 003 7v1h14V7a1 1 0 00-.544-.895l-7-4zM5 10h2v6H5v-6zm4 0h2v6H9v-6zm4 0h2v6h-2v-6zM3 18a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800 tracking-tight">KLINIK SEHAT DIGITAL</h1>
+                    <p class="text-sm text-slate-500 font-medium">Pusat Pelayanan Terpadu</p>
+                </div>
+            </div>
+            <div class="text-right">
+                <p id="jam-digital" class="text-3xl font-bold text-slate-700 tracking-wider">00:00:00</p>
+                <p id="tanggal-digital" class="text-sm text-slate-500 font-medium">Senin, 1 Januari 2024</p>
+            </div>
+        </header>
+
+        <main class="flex-1 p-8 grid grid-cols-12 gap-8 items-center bg-slate-100">
+
+            <div class="col-span-8 h-full flex flex-col justify-center">
+                <div class="bg-white rounded-[3rem] shadow-2xl border border-slate-100 p-12 text-center relative overflow-hidden h-[80%] flex flex-col justify-center">
+                    <div class="absolute -top-10 -left-10 w-40 h-40 bg-teal-50 rounded-full blur-3xl"></div>
+                    <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-50 rounded-full blur-3xl"></div>
+
+                    <h2 class="text-3xl font-bold tracking-widest text-slate-400 mb-8 uppercase">Nomor Antrean</h2>
+
+                    <div class="py-10">
+                        <span id="current-number"
+                            class="text-[14rem] font-black text-slate-800 leading-none tracking-tighter drop-shadow-md">
+                            000
+                        </span>
+                    </div>
+
+                    <div class="mt-8">
+                        <span class="inline-block bg-teal-100 text-teal-800 text-4xl font-extrabold px-12 py-5 rounded-full border-4 border-teal-50 pulse-slow">
+                            Menuju: <span id="display-loket">LOKET 1</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-span-4 h-full flex flex-col justify-center gap-6 h-[80%]">
+                <div class="bg-white p-8 rounded-3xl shadow-xl border border-slate-100 flex-1 flex flex-col justify-center text-center">
+                    <h3 class="text-slate-500 font-bold tracking-wider uppercase mb-2">Sisa Menunggu</h3>
+                    <p id="remaining-queue" class="text-7xl font-black text-amber-500">0</p>
+                    <p class="text-slate-400 mt-2">Orang dalam antrean</p>
+                </div>
+
+                <div class="bg-slate-800 p-8 rounded-3xl shadow-xl flex-1 flex flex-col justify-center text-center">
+                    <h3 class="text-slate-400 font-bold tracking-wider uppercase mb-2">Total Tiket Hari Ini</h3>
+                    <p id="last-number" class="text-5xl font-black text-white">000</p>
+                    <p class="text-slate-400 mt-2">Telah diterbitkan</p>
+                </div>
+            </div>
+
+        </main>
+
+        <footer class="bg-teal-700 text-white text-lg font-medium py-3 px-4 shadow-inner z-10">
+            <div class="marquee-container w-full">
+                <span class="marquee-text">
+                    Selamat datang di Klinik Sehat Digital. Mohon siapkan Kartu Identitas (KTP/KIA) dan Kartu BPJS Anda sebelum menuju meja pelayanan. Terima kasih atas kesabaran Anda menunggu panggilan.
+                </span>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        let isMonitorActive = false;
+        let lastPlayedTimestamp = null;
+        let daftarSuara = [];
+
+        // ─── 1. Muat daftar suara ────────────────────────────────────────────────
+        function muatDaftarSuara() {
+            daftarSuara = window.speechSynthesis.getVoices();
+        }
+
+        // Panggil langsung (Firefox sudah siap) DAN saat event voiceschanged (Chrome)
+        muatDaftarSuara();
+        window.speechSynthesis.onvoiceschanged = muatDaftarSuara;
+
+        // ─── 2. Jam Digital ──────────────────────────────────────────────────────
+        function updateJam() {
+            const now = new Date();
+            document.getElementById('jam-digital').innerText =
+                now.toLocaleTimeString('id-ID', { hour12: false });
+            document.getElementById('tanggal-digital').innerText =
+                now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        }
+        setInterval(updateJam, 1000);
+        updateJam();
+
+        // ─── 3. Tombol Mulai ─────────────────────────────────────────────────────
+        function startMonitor() {
+            document.getElementById('start-screen').style.display = 'none';
+            document.getElementById('main-screen').classList.remove('hidden');
+            isMonitorActive = true;
+
+            // Muat ulang suara setelah ada gesture pengguna (penting di Chrome)
+            muatDaftarSuara();
+
+            // Pancing AudioContext agar tidak diblokir browser
+            const pancing = new SpeechSynthesisUtterance(' ');
+            pancing.volume = 0;
+            window.speechSynthesis.speak(pancing);
+
+            setInterval(fetchStatus, 2000);
+            fetchStatus();
+        }
+
+        // ─── 4. Fungsi Suara Google Perempuan Indonesia (Ditambah Parameter Loket) ─
+        function putarSuara(nomor, namaLoket) {
+            // Hentikan suara yang mungkin sedang berjalan
+            window.speechSynthesis.cancel();
+
+            // Teks sekarang disesuaikan dengan loket yang dipanggil
+            const teks = `Nomor antrean ${nomor}, silakan menuju ${namaLoket}.`;
+            const utt = new SpeechSynthesisUtterance(teks);
+            utt.lang    = 'id-ID';
+            utt.rate    = 0.88;   // Sedikit lebih lambat agar terdengar elegan
+            utt.pitch   = 1.1;    // Sedikit lebih tinggi → kesan suara perempuan
+            utt.volume  = 1;
+
+            // Pencarian suara bertingkat: dari yang paling spesifik ke fallback
+            const prioritas = [
+                v => v.name === 'Google Bahasa Indonesia',
+                v => v.name.toLowerCase().includes('google') && v.lang === 'id-ID',
+                v => v.lang === 'id-ID',
+                v => v.lang.startsWith('id'),
+            ];
+
+            for (const cocok of prioritas) {
+                const temuan = daftarSuara.find(cocok);
+                if (temuan) {
+                    utt.voice = temuan;
+                    break;
+                }
+            }
+
+            // Workaround bug Chrome: speechSynthesis berhenti di ~15 detik
+            const timer = setInterval(() => {
+                if (!window.speechSynthesis.speaking) {
+                    clearInterval(timer);
+                    return;
+                }
+                window.speechSynthesis.pause();
+                window.speechSynthesis.resume();
+            }, 5000);
+
+            utt.onend  = () => clearInterval(timer);
+            utt.onerror = (e) => {
+                clearInterval(timer);
+                console.warn('TTS error:', e.error);
+            };
+
+            window.speechSynthesis.speak(utt);
+        }
+
+        // ─── 5. Ambil Data dari API ──────────────────────────────────────────────
+        async function fetchStatus() {
+            if (!isMonitorActive) return;
+
+            try {
+                const res  = await fetch('/api/antrean/status');
+                const data = await res.json();
+
+                const fmt = (n) => String(n).padStart(3, '0');
+
+                document.getElementById('current-number').innerText  = fmt(data.current);
+                document.getElementById('last-number').innerText     = fmt(data.last);
+                document.getElementById('remaining-queue').innerText = data.sisaAntrean;
+                
+                // Menampilkan nama Loket sesuai data dari server
+                if(data.loket) {
+                    document.getElementById('display-loket').innerText = data.loket.toUpperCase();
+                }
+
+                // Putar suara hanya jika ada panggilan baru
+                if (data.lastCallTimestamp && data.lastCallTimestamp !== lastPlayedTimestamp) {
+                    lastPlayedTimestamp = data.lastCallTimestamp;
+                    if (data.current > 0) {
+                        // Memasukkan nama loket ke dalam fungsi suara
+                        putarSuara(data.current, data.loket || 'Loket 1');
+                    }
+                }
+            } catch (err) {
+                console.error('Gagal mengambil data antrean:', err);
+            }
+        }
+    </script>
+</body>
+</html>
