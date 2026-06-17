@@ -12,23 +12,23 @@ Proyek ini dikerjakan bareng-bareng sama 4 orang, dengan pembagian tugas:
 
 1. **Arif Rahmat Darmawan (202451079) - Backend & Admin Panel**
    - Bikin server pakai Node.js dan Express.js.
-   - Ngatur database sementara buat nyimpen data urutan antrean.
+   - Mengatur database sementara untuk menyimpan data urutan antrean.
    - Bikin halaman Admin buat ngontrol antrean (tombol panggil selanjutnya, panggil ulang, dan milih loket).
 
-2. **Ahmad Saefum Minan (202451083) - Layar Monitor & Sistem Suara**
-   - Bikin tampilan Layar Monitor besar yang dipasang di ruang tunggu.
-   - Nyambungin layar monitor ke server biar angkanya auto-update tanpa perlu di-refresh.
-   - Nambahin fitur suara Google (Text-to-Speech) yang otomatis bacain nomor waktu admin mencet tombol panggil.
+2. **Ahmad Saefum Minan (202451083) - Display Monitor & Sistem Suara**
+   - Membuat tampilan Layar untuk Monitor yang dipasang di ruang tunggu.
+   - Menyambungkan layar monitor, sistem angkanya auto-update tanpa perlu di-refresh.
+   - Menambahkan fitur suara Google (Text-to-Speech) yang otomatis bacain nomor waktu admin mencet tombol panggil.
 
-3. **Rico Endico (202451086) - Frontend Kiosk & Fitur Cetak**
-   - Mendesain halaman utama dan halaman ambil tiket buat pengunjung pakai Tailwind CSS.
-   - Bikin animasi *loading* waktu tiket diambil.
-   - Bikin fitur *Pop-up* struk antrean dan ngatur CSS Print biar waktu di-print, yang keluar cuma struknya aja.
+3. **Marcel Ilham Putra (202451106) - Frontend Kiosk & Fitur Cetak**
+   - Desain halaman utama dan halaman ambil tiket buat pengunjung mwnggunakan Tailwind CSS.
+   - Membuat tampilan halaman tiket diambil.
+   - Membua fitur struk antrean dan mengatur CSS Print agar waktu di-print, yang keluar hanya struknya saja.
 
-4. **Marcel Ilham Putra (202451106) - Integrasi API WhatsApp & Deployment**
-   - Nyambungin web ke API Fonnte biar bisa ngirim pesan WhatsApp.
-   - Bikin logika otomatis: kalau antrean sisa 5, kirim WA suruh siap-siap. Kalau gilirannya tiba, kirim WA suruh ke loket.
-   - Ngetes error (QA), nulis dokumentasi (README ini), dan nge-deploy web ke internet biar bisa diakses online.
+4. **Rico Endico (202451086) - Integrasi API WhatsApp & Deployment**
+   - Menyanbungkan web ke API Fonnte agar bisa mengirim pesan notifikasi WhatsApp.
+   - Membuar logika otomatis: Jika antrean sisa 5, Norif WA akan mengirim pesan sisa antrian. Kalau gilirannya tiba, Notif WA akan memberitahu agar segera ke loket.
+   - Testing error (QA), deploy web ke internet biar bisa diakses online menggunakan vercel.
 
 ---
 
