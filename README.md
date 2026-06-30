@@ -57,3 +57,4 @@ Buat ngejalanin aplikasi ini di komputer, ikutin langkah simpel ini:
 2. Buka terminal di dalam foldernya, terus ketik perintah ini buat install Express:
    ```bash
    npm install
+   node server.js
