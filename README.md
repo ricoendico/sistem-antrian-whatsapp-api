@@ -8,7 +8,7 @@ Ini adalah aplikasi web untuk ngatur antrean di klinik atau puskesmas biar lebih
 
 ## 👥 Anggota Kelompok & Jobdesk
 
-Proyek ini dikerjakan bareng-bareng sama 4 orang, dengan pembagian tugas:
+Proyek ini dikerjakan 4 orang, dengan pembagian tugas:
 
 1. **Arif Rahmat Darmawan (202451079) - Backend & Admin Panel**
    - Bikin server pakai Node.js dan Express.js.
